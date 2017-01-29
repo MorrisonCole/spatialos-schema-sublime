@@ -1,0 +1,124 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: SpatialOS Schema
+scopeName: source.schema
+fileTypes: [schema]
+uuid: 8751c4b8-ddba-49e9-bc2b-692b27305ffc
+
+patterns:
+
+- include: '#package'
+
+- include: '#import'
+
+- include: '#comment'
+
+- comment: type definition
+  name: meta.type
+  begin: (type)\s+([\w]+)\s*(\{)
+  beginCaptures:
+    '1': {name: storage.modifier}
+    '2': {name: entity.name}
+    '3': {name: punctuation.separator}
+  end: \}
+  patterns:
+  - include: '#field'
+  - include: '#comment'
+
+- comment: component definition
+  name: meta.component
+  begin: (component)\s+([\w]+)\s*(\{)
+  beginCaptures:
+    '1': {name: storage.modifier}
+    '2': {name: entity.name}
+  end: \}
+  patterns:
+  - include: '#storage'
+  - include: '#id'
+  - include: '#command'
+  - include: '#comment'
+  - include: '#field'
+
+repository:
+
+  package:
+    comment: package company.package;
+    name: meta.package
+    match: (package)\s+([\w\.]+)(;)
+    captures:
+      '1': {name: keyword.other.package}
+      '2': {name: support.other.package}
+
+  import:
+    comment: import company.package;
+    name: meta.import
+    match: (import)\s+("[\w\/]+[a-zA-Z0-9_]+\.schema")(;)
+    captures:
+      '1': {name: keyword.other.import}
+      '2': {name: support.class.import}
+
+  storage:
+    comment: data declaration
+    name: meta.component.body
+    match: (data)\s+(\w+)\;
+    captures:
+      '1': {name: keyword.other}
+      '2': {name: storage.type.data}
+
+  primitive:
+    comment: built in data type
+    name: meta.declaration.body
+    match: \b(bool|uint32|uint64|int32|int64|sint32|sint64|fixed32|fixed64|sfixed32|sfixed64|float|double|string|bytes|Coordinates|Vector3d|Vector3f|EntityId|EntityPosition|option|map)\b
+    captures:
+      '1': {name: storage.type.primitive}
+
+  id:
+    comment: id declaration
+    name: meta.component.body
+    match: (id)\s*(\=)\s*(\d+)\;
+    captures:
+      '2': {name: keyword.operator}
+      '3': {name: constant.numeric}
+
+  command:
+    comment: command declaration
+    name: meta.component.body
+    match: (command)\s+(\w+)\s+(\w+)\s+(returns)\s+(\w+)\;
+    captures:
+      '1': {name: keyword.other}
+      '2': {name: storage.type.data}
+      '4': {name: keyword.other}
+      '5': {name: storage.type.data}
+
+  field:
+    comment: field definition
+    patterns:
+    - name: meta.type.field
+      match: (\w+)\s+(\w+)\s+(\=)\s+(\d+)\;
+      captures:
+        '1': {name: storage.type}
+        '3': {name: keyword.operator}
+        '4': {name: constant.numeric}
+    - name: meta.type.field
+      match: (map)\<(\w+)(\,)\s*(\w+)\>\s+(\w+)\s+(\=)\s+(\d+)\;
+      captures:
+        '1': {name: storage.type}
+        '2': {name: storage.type}
+        '3': {name: punctuation.separator}
+        '4': {name: storage.type}
+        '6': {name: keyword.operator}
+        '7': {name: constant.numeric}
+    - name: meta.type.field
+      match: (option)\<(\w+)\>\s+(\w+)\s+(\=)\s+(\d+)\;
+      captures:
+        '1': {name: storage.type}
+        '2': {name: storage.type}
+        '4': {name: keyword.operator}
+        '5': {name: constant.numeric}
+    - include: '#primitive'
+
+  comment:
+    comment: a schema comment
+    name: comment.line.double-slash
+    begin: //
+    end: $\n?

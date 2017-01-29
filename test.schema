@@ -1,0 +1,26 @@
+package improbable.ship;
+import "improbable/math/data/quaternion.schema";
+
+type PlayerInfo {
+	EntityId entity_id = 1;
+	uint32 consecutive_unsuccessful_pings = 2;
+}
+
+type ConnectedClientsMap {
+  map<string, PlayerInfo> connected_clients = 1;
+}
+
+type SpawnPlayerRequest { }
+
+type SpawnPlayerResponse {
+	// EntityId of spawned player
+	option<EntityId> player_entity_id = 1;
+}
+
+component PlayerLifecycleManager {
+  id = 1005;
+
+  data ConnectedClientsMap;
+
+  command SpawnPlayerRequest spawn_player returns SpawnPlayerResponse;
+}
