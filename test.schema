@@ -1,5 +1,6 @@
 package improbable.ship;
 import "improbable/math/data/quaternion.schema";
+import "improbable/core/Nothing.schema";
 
 type PlayerInfo {
 	EntityId entity_id = 1;
@@ -17,10 +18,21 @@ type SpawnPlayerResponse {
 	option<EntityId> player_entity_id = 1;
 }
 
+type SpellAnimationEvent {
+  SpellType spell_type = 1;
+  Coordinates position = 2;
+}
+
+type SpellCastRequest {
+  SpellType spell_type = 1;
+  Coordinates position = 2;
+}
+
 component PlayerLifecycleManager {
   id = 1005;
 
   data ConnectedClientsMap;
-
   command SpawnPlayerRequest spawn_player returns SpawnPlayerResponse;
+  command improbable.core.Nothing spell_cast_request(SpellCastRequest);
+  event SpellAnimationEvent spell_animation_event;
 }
