@@ -63,6 +63,45 @@
 		</dict>
 		<dict>
 			<key>begin</key>
+			<string>(enum)\s+([\w]+)\s*(\{)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.modifier</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.separator</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>enum definition</string>
+			<key>end</key>
+			<string>\}</string>
+			<key>name</key>
+			<string>meta.enum</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#enum</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#comment</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>begin</key>
 			<string>(component)\s+([\w]+)\s*(\{)</string>
 			<key>beginCaptures</key>
 			<dict>
@@ -103,6 +142,10 @@
 				</dict>
 				<dict>
 					<key>include</key>
+					<string>#event</string>
+				</dict>
+				<dict>
+					<key>include</key>
 					<string>#field</string>
 				</dict>
 			</array>
@@ -111,6 +154,114 @@
 	<key>repository</key>
 	<dict>
 		<key>command</key>
+		<dict>
+			<key>comment</key>
+			<string>command declaration</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.other</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>storage.type.data</string>
+						</dict>
+						<key>4</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.other</string>
+						</dict>
+						<key>5</key>
+						<dict>
+							<key>name</key>
+							<string>storage.type.data</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>(command)\s+(\w+)\s+(\w+)\s+(returns)\s+(\w+)\;</string>
+					<key>name</key>
+					<string>meta.command.body</string>
+				</dict>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.other</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>storage.type.data</string>
+						</dict>
+						<key>4</key>
+						<dict>
+							<key>name</key>
+							<string>storage.type.data</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>(command)\s+([\w\.]+)\s+(\w+)\s*\(([\w\.]+)\s*\)\;</string>
+					<key>name</key>
+					<string>meta.command.body</string>
+				</dict>
+			</array>
+		</dict>
+		<key>comment</key>
+		<dict>
+			<key>begin</key>
+			<string>//</string>
+			<key>comment</key>
+			<string>a schema comment</string>
+			<key>end</key>
+			<string>$\n?</string>
+			<key>name</key>
+			<string>comment.line.double-slash</string>
+		</dict>
+		<key>enum</key>
+		<dict>
+			<key>comment</key>
+			<string>enum definition</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>storage.type</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.operator</string>
+						</dict>
+						<key>3</key>
+						<dict>
+							<key>name</key>
+							<string>constant.numeric</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>(\w+)\s(\=)\s+(\d+)\;</string>
+					<key>name</key>
+					<string>meta.type.enum</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#primitive</string>
+				</dict>
+			</array>
+		</dict>
+		<key>event</key>
 		<dict>
 			<key>captures</key>
 			<dict>
@@ -124,34 +275,13 @@
 					<key>name</key>
 					<string>storage.type.data</string>
 				</dict>
-				<key>4</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.other</string>
-				</dict>
-				<key>5</key>
-				<dict>
-					<key>name</key>
-					<string>storage.type.data</string>
-				</dict>
 			</dict>
 			<key>comment</key>
-			<string>command declaration</string>
+			<string>event declaration</string>
 			<key>match</key>
-			<string>(command)\s+(\w+)\s+(\w+)\s+(returns)\s+(\w+)\;</string>
+			<string>(event)\s+(\w+)\s(\w+)\;</string>
 			<key>name</key>
-			<string>meta.component.body</string>
-		</dict>
-		<key>comment</key>
-		<dict>
-			<key>begin</key>
-			<string>//</string>
-			<key>comment</key>
-			<string>a schema comment</string>
-			<key>end</key>
-			<string>$\n?</string>
-			<key>name</key>
-			<string>comment.line.double-slash</string>
+			<string>meta.event.body</string>
 		</dict>
 		<key>field</key>
 		<dict>
